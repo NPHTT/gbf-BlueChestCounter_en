@@ -1,5 +1,5 @@
 const EMPTY_OBJ = {
-    //大巴
+    // Da Ba (大巴)
     count: 0,
     ffjCount: 0,
     whiteRingCount: 0,
@@ -7,36 +7,36 @@ const EMPTY_OBJ = {
     redRingCount: 0,
     unHitCount: 0,
     noBlueChestCount: 0,
-    //akx
-    akxCount: 0,//akx蓝数
+    // AKX
+    akxCount: 0, // AKX blue count
     akxFfj: 0,
     akxWhiteRingCount: 0,
     akxBlueRingCount: 0,
     akxRedRingCount: 0,
     akxUnHitCount: 0,
-    //cb
+    // CB
     cbCount: 0,
     cbFfj: 0,
-    //大公
-	grandeCount: 0,
-	grandeFfjCount: 0,
-	grandeWhiteRingCount: 0,
-	grandeBlueRingCount: 0,
-	grandeRedRingCount: 0,
-	grandeUnHitCount: 0,
+    // Da Gong (大公)
+    grandeCount: 0,
+    grandeFfjCount: 0,
+    grandeWhiteRingCount: 0,
+    grandeBlueRingCount: 0,
+    grandeRedRingCount: 0,
+    grandeUnHitCount: 0,
 
     historyHitArray: []
-}
+};
 
 refreshStats();
 
 document.addEventListener('DOMContentLoaded', function () {
-    var obutton = document.getElementById("resetCounter").getElementsByTagName("button");
-    for (var i = obutton.length - 1; i >= 0; i--) {
-        obutton[i].onclick = i == 0 ? () => resetPbCounter()
+    var resetButtons = document.getElementById("resetCounter").getElementsByTagName("button");
+    for (var i = resetButtons.length - 1; i >= 0; i--) {
+        resetButtons[i].onclick = i == 0 ? () => resetPbCounter()
             : i == 1 ? () => resetAkxCounter()
             : i == 2 ? () => resetCbCounter()
-            : () => resetGrandeCounter()
+            : () => resetGrandeCounter();
     }
 
     var pasteSwitch = document.getElementById("pasteSwitch");
@@ -45,6 +45,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     pasteSwitch.onclick = () => setPasteSwitch(pasteSwitch);
 });
+
+// Functions for resetting counters for different categories
 
 function resetPbCounter() {
     chrome.storage.sync.get("blueChestObj", function (result) {
@@ -63,10 +65,10 @@ function resetPbCounter() {
         }
 
         chrome.storage.sync.set({ "blueChestObj": resetObj }, function () {
-            console.log('大巴蓝箱记录已重置' + JSON.stringify(resetObj));
-        })
+            console.log('PBaha blue chest records have been reset: ' + JSON.stringify(resetObj));
+        });
         refreshStats();
-    })
+    });
 }
 
 function resetAkxCounter() {
@@ -85,7 +87,7 @@ function resetAkxCounter() {
         }
 
         chrome.storage.sync.set({ "blueChestObj": resetObj }, function () {
-            console.log('akx蓝箱记录已重置' + JSON.stringify(resetObj));
+            console.log('AKX blue chest records have been reset: ' + JSON.stringify(resetObj));
         });
         refreshStats();
     });
@@ -102,7 +104,7 @@ function resetCbCounter() {
             resetObj.cbFfj = 0;
         }
         chrome.storage.sync.set({ "blueChestObj": resetObj }, function () {
-            console.log('cb记录已重置' + JSON.stringify(resetObj));
+            console.log('Ult Ba records have been reset: ' + JSON.stringify(resetObj));
         });
         refreshStats();
     });
@@ -124,7 +126,7 @@ function resetGrandeCounter() {
         }
 
         chrome.storage.sync.set({ "blueChestObj": resetObj }, function () {
-            console.log('大公蓝箱记录已重置' + JSON.stringify(resetObj));
+            console.log('Zoi Blue chest records have been reset: ' + JSON.stringify(resetObj));
         });
         refreshStats();
     });
@@ -133,10 +135,10 @@ function resetGrandeCounter() {
 function getHistoryHitStr(array) {
     let str = '';
     array.map((e, i) => {
-        str += (e.k + ' ' + e.v)
-        if (i != array.length - 1) str += '; '
-    })
-    return str
+        str += (e.k + ' ' + e.v);
+        if (i != array.length - 1) str += '; ';
+    });
+    return str;
 }
 
 function refreshStats() {
@@ -168,7 +170,7 @@ function refreshStats() {
             document.getElementById("grande-ffj").innerHTML = 0;
             document.getElementById("grande-un-hit").innerHTML = 0;
 
-            document.getElementById("hit-array").innerHTML = '无';
+            document.getElementById("hit-array").innerHTML = 'None';
         } else {
             document.getElementById("blue-chest").innerHTML = result.blueChestObj.count;
             document.getElementById("no-blue-chest").innerHTML = result.blueChestObj.noBlueChestCount;
@@ -177,8 +179,8 @@ function refreshStats() {
             document.getElementById("red-ring").innerHTML = result.blueChestObj.redRingCount;
             document.getElementById("ffj").innerHTML = result.blueChestObj.ffjCount;
             document.getElementById("un-hit").innerHTML = result.blueChestObj.unHitCount;
-            let bluechestRate = 100 * result.blueChestObj.count/(result.blueChestObj.count + result.blueChestObj.noBlueChestCount);
-            document.getElementById("bluechest-rate").innerHTML = parseFloat(bluechestRate).toFixed(1)+"%";
+            let bluechestRate = 100 * result.blueChestObj.count / (result.blueChestObj.count + result.blueChestObj.noBlueChestCount);
+            document.getElementById("bluechest-rate").innerHTML = parseFloat(bluechestRate).toFixed(1) + "%";
 
             document.getElementById("akx-blue-chest").innerHTML = result.blueChestObj.akxCount;
             document.getElementById("akx-white-ring").innerHTML = result.blueChestObj.akxWhiteRingCount;
@@ -197,13 +199,13 @@ function refreshStats() {
             document.getElementById("grande-ffj").innerHTML = result.blueChestObj.grandeFfjCount;
             document.getElementById("grande-un-hit").innerHTML = result.blueChestObj.grandeUnHitCount;
 
-            document.getElementById("hit-array").innerHTML = (result.blueChestObj.historyHitArray || []).length > 0 ? getHistoryHitStr(result.blueChestObj.historyHitArray) : '无';
+            document.getElementById("hit-array").innerHTML = (result.blueChestObj.historyHitArray || []).length > 0 ? getHistoryHitStr(result.blueChestObj.historyHitArray) : 'None';
         }
     });
 }
 
 function setPasteSwitch(pasteSwitch) {
-    console.log("点击开关");
+    console.log("Click on switch");
 
     if (pasteSwitch.checked == true) {
         chrome.storage.sync.set({ "pasteEnabled": true }, function () { });
